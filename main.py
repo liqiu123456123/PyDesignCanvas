@@ -144,6 +144,10 @@ class Menu:
         self.erasers = [  # 橡皮图片
             pygame.image.load("img/橡皮擦.png").convert_alpha(),
         ]
+        self.save_img = [  # 橡皮图片
+            pygame.image.load("img/保存.png").convert_alpha(),
+        ]
+
         self.erasers_rect = []
         for (i, img) in enumerate(self.erasers):  # 橡皮列表
             rect_x = 10 + (i + 1) * 64  # 假设x坐标保持不变，与画笔相同布局
@@ -155,6 +159,10 @@ class Menu:
         for (i, img) in enumerate(self.pens):  # 画笔列表
             rect = pygame.Rect(10, 10 + i * 64, 64, 64)
             self.pens_rect.append(rect)
+        self.save_rect = []
+        for (i, img) in enumerate(self.save_img):  # 画笔列表
+            rect = pygame.Rect(830, 10 + i * 64, 64, 64)
+            self.save_rect.append(rect)
 
         self.sizes = [  # 加减号图片
             pygame.image.load("img/加号.png").convert_alpha(),
@@ -177,7 +185,11 @@ class Menu:
             self.screen.blit(img, self.erasers_rect[i].topleft)
         for (i, img) in enumerate(self.sizes): # 绘制 + - 按钮
             self.screen.blit(img, self.sizes_rect[i].topleft)
+
+        for (i, img) in enumerate(self.save_img): # 绘制 + - 按钮
+            self.screen.blit(img, self.save_rect[i].topleft)
         # 绘制用于实时展示画笔的小窗口
+
         self.screen.fill((255, 255, 255), (10, 180, 64, 64))
         pygame.draw.rect(self.screen, (0, 0, 0), (180+80, 10, 64, 64), 1)
         size = self.brush.get_size()
@@ -218,7 +230,7 @@ class Paint:
 
     def __init__(self):
         pygame.init()  # 初始化pygame库
-        self.screen = pygame.display.set_mode((800, 600))  # 显示窗口
+        self.screen = pygame.display.set_mode((950, 600))  # 显示窗口
         pygame.display.set_caption("艺术画板")  # 设置窗口标题
         self.clock = pygame.time.Clock()  # 控制速率
         self.brush = Brush(self.screen)  # 创建画刷对象
