@@ -231,7 +231,7 @@ class Paint:
     def __init__(self):
         pygame.init()  # 初始化pygame库
         self.screen = pygame.display.set_mode((950, 600))  # 显示窗口
-        pygame.display.set_caption("艺术画板")  # 设置窗口标题
+        pygame.display.set_caption("艺术画板V1.0")  # 设置窗口标题
         self.clock = pygame.time.Clock()  # 控制速率
         self.brush = Brush(self.screen)  # 创建画刷对象
         self.menu = Menu(self.screen)  # 创建窗口菜单
