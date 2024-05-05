@@ -40,9 +40,6 @@ class Brush:
 
     def set_color(self, color):
         self.color = color
-        for i in range(self.brush.get_width()):
-            for j in range(self.brush.get_height()):
-                self.brush.set_at((i, j), color + (self.brush.get_at((i, j)).a,))
 
     def get_color(self):
         return self.color
