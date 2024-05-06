@@ -2,6 +2,7 @@
 import math
 import pygame
 from pygame.locals import QUIT, KEYDOWN, K_ESCAPE
+import random
 class Brush:
     """
     画笔类
@@ -70,50 +71,7 @@ class Menu:
     def __init__(self, screen):
         self.screen = screen  # 初始化窗口
         self.brush = None
-        self.colors = [
-            (0xff, 0x00, 0x00),  # 红色
-            (0xff, 0x80, 0x00),  # 橙色
-            (0xff, 0xff, 0x00),  # 黄色
-            (0x00, 0xff, 0x00),  # 绿色
-            (0x00, 0xff, 0x80),  # 青色
-            (0x00, 0x00, 0xff),  # 蓝色
-            (0x80, 0x00, 0xff),  # 紫色
-            (0xff, 0x00, 0xff),  # 品红色
-            (0xc0, 0xc0, 0xc0),  # 银色
-            (0x80, 0x80, 0x80),  # 灰色
-            (0x40, 0x40, 0x40),  # 深灰色
-            (0x00, 0x00, 0x00),  # 黑色
-
-            # 添加更多颜色
-            (0xff, 0x40, 0x00),  # 深红色
-            (0xff, 0xa0, 0x00),  # 浅橙色
-            (0xff, 0xff, 0x80),  # 浅黄色
-            (0x00, 0xff, 0x40),  # 深绿色
-            (0x00, 0x80, 0xff),  # 深蓝色
-            (0x80, 0x40, 0xff),  # 深紫色
-            (0xff, 0x40, 0xff),  # 深品红色
-            (0xe0, 0xe0, 0xe0),  # 浅银色
-            (0xa0, 0xa0, 0xa0),  # 浅灰色
-            (0x60, 0x60, 0x60),  # 中灰色
-
-            # 继续添加
-            (0xff, 0x00, 0x80),  # 玫瑰红
-            (0xff, 0x00, 0x40),  # 栗色
-            (0xff, 0xc0, 0x00),  # 金色
-            (0x80, 0xff, 0x00),  # 黄绿色
-            (0x00, 0xff, 0xc0),  # 孔雀蓝
-            (0x00, 0x40, 0xff),  # 靛蓝
-            (0xc0, 0x00, 0xff),  # 深品红
-            (0xff, 0xc0, 0xff),  # 浅粉色
-            (0x90, 0x90, 0x90),  # 中性灰
-            (0x30, 0x30, 0x30),  # 暗灰色
-
-            # 更多颜色
-            (0x40, 0x80, 0x00),  # 橄榄色
-            (0x80, 0x40, 0x00),  # 褐色
-            (0x80, 0xff, 0x80),  # 淡青色
-            (0x00, 0x80, 0x80),  # 浅蓝色
-        ]
+        self.generate_random_colors()
         self.eraser_color = (0xff, 0xff, 0xff) # 初始颜色
         # 计算每个色块在画板中的坐标值，便于绘制
         self.colors_rect = []
@@ -171,6 +129,10 @@ class Menu:
         for (i, img) in enumerate(self.sizes):
             rect = pygame.Rect(138+60, 20 + i * 32, 32, 32)
             self.sizes_rect.append(rect)
+
+    def generate_random_colors(self, num_colors=24):
+        self.colors = [(random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)) for _ in
+                       range(num_colors)]
 
     def set_brush(self, brush):  # 设置画笔对象
         self.brush = brush
