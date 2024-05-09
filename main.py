@@ -148,8 +148,6 @@ class Menu:
         for (i, img) in enumerate(self.save_img): # 绘制 + - 按钮
             self.screen.blit(img, self.save_rect[i].topleft)
         # 绘制用于实时展示画笔的小窗口
-
-        self.screen.fill((255, 255, 255), (10, 180, 64, 64))
         pygame.draw.rect(self.screen, (0, 0, 0), (180+80, 10, 64, 64), 1)
         size = self.brush.get_size()
         y = 10 + 32
