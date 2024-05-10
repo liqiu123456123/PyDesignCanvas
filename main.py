@@ -3,50 +3,108 @@ import math
 import pygame
 from pygame.locals import QUIT, KEYDOWN, K_ESCAPE
 import random
+
+
 class Brush:
     def __init__(self, screen):
-        self.screen = screen
-        self.color = (0, 0, 0)
-        self.size = 1
-        self.drawing = False
-        self.last_pos = None
-        self.space = 1
+        """
+        Brush 类的构造函数，用于初始化画笔
+
+        参数:
+        screen (pygame.Surface): 绘制表面
+        """
+        self.screen = screen  # 绘制表面
+        self.color = (0, 0, 0)  # 画笔颜色，默认为黑色
+        self.size = 1  # 画笔大小
+        self.drawing = False  # 是否正在绘画
+        self.last_pos = None  # 上一个绘制点的位置
+        self.space = 1  # 画笔间距（在原始代码中未使用）
+
+        # 加载画笔图像并设置默认大小为1x1（实际上可能是用于绘制时的图标或光标）
         self.brush = pygame.image.load("img/画笔.png").convert_alpha()
         self.brush_now = self.brush.subsurface((0, 0), (1, 1))
 
-    # 开始绘画
+        # 开始绘画
+
     def start_draw(self, pos):
+        """
+        开始绘画操作
+
+        参数:
+        pos (tuple): 起始点的坐标（x, y）
+        """
         self.drawing = True
         self.last_pos = pos
 
     def end_draw(self):
+        """
+        结束绘画操作
+        """
         self.drawing = False
 
     def get_current_brush(self):
+        """
+        获取当前使用的画笔（或称为光标）图像
+
+        返回:
+        pygame.Surface: 当前画笔图像
+        """
         return self.brush_now
 
     def set_size(self, size):
+        """
+        设置画笔大小
+
+        参数:
+        size (float): 画笔大小，范围在0.5到32之间
+        """
         if size < 0.5:
             size = 0.5
         elif size > 32:
             size = 32
         self.size = size
-        self.brush_now = self.brush.subsurface((0, 0), (size * 2, size * 2))
+        # 更新画笔图像的子表面大小
+        self.brush_now = self.brush.subsurface((0, 0), (int(size * 2), int(size * 2)))
 
     def get_size(self):
+        """
+        获取画笔大小
+
+        返回:
+        float: 当前画笔大小
+        """
         return self.size
 
     def set_color(self, color):
+        """
+        设置画笔颜色
+
+        参数:
+        color (tuple): RGB颜色值，如(255, 0, 0)表示红色
+        """
         self.color = color
 
     def get_color(self):
+        """
+        获取画笔颜色
+
+        返回:
+        tuple: 当前画笔颜色
+        """
         return self.color
 
     def draw(self, pos):
+        """
+        在屏幕上绘制点
+
+        参数:
+        pos (tuple): 要绘制的点的坐标（x, y）
+        """
         if self.drawing:
+            # 注意：_get_points(pos) 这个方法没有在代码中定义，这里假设它返回一系列点
             for p in self._get_points(pos):
                 pygame.draw.circle(self.screen, self.color, p, int(self.size))
-            self.last_pos = pos
+            self.last_pos = pos  # 更新上一个绘制点的位置
 
     def _get_points(self, pos):
         points = [(self.last_pos[0], self.last_pos[1])]
