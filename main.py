@@ -119,13 +119,23 @@ class Brush:
         points = map(lambda x: (int(0.5 + x[0]), int(0.5 + x[1])), points)
         return list(set(points))
 
+
 class Menu:
     def __init__(self, screen):
+        # 初始化菜单，传入窗口表面作为参数
         self.screen = screen
-        self.brush = None
+        self.brush = None  # 画笔对象，稍后由Paint类设置
+
+        # 生成随机颜色（虽然此处并未在__init__中显示生成过程，但假设有generate_random_colors方法）
         self.generate_random_colors()
+
+        # 设置橡皮擦颜色为白色
         self.eraser_color = (0xff, 0xff, 0xff)
+
+        # 存储颜色矩形的列表
         self.colors_rect = []
+
+        # 初始化颜色矩形的位置和大小
         x_start = 364
         y_start = 10
         width = 32
@@ -133,44 +143,58 @@ class Menu:
         spacing = 2
         cols = 12
 
+        # 遍历颜色列表（尽管在__init__中没有显示，但假设self.colors是一个包含颜色的列表）
         for i in range(len(self.colors)):
             x = x_start + (i % cols) * (width + spacing)
             y = y_start + (i // cols) * (height + spacing)
             rect = pygame.Rect(x, y, width, height)
             self.colors_rect.append(rect)
+
+            # 加载画笔图片并转换为包含alpha通道的表面
         self.pens = [
             pygame.image.load("img/画笔.png").convert_alpha(),
         ]
+
+        # 加载橡皮擦图片并转换为包含alpha通道的表面
         self.erasers = [
             pygame.image.load("img/橡皮擦.png").convert_alpha(),
         ]
+
+        # 加载保存图片并转换为包含alpha通道的表面
         self.save_img = [
             pygame.image.load("img/保存.png").convert_alpha(),
         ]
 
+        # 存储橡皮擦矩形的列表
         self.erasers_rect = []
         for (i, img) in enumerate(self.erasers):
             rect_x = 10 + (i + 1) * 64
             rect_y = 10
-            rect = pygame.Rect(rect_x+30, rect_y + i * 64, 64, 64)
+            rect = pygame.Rect(rect_x + 30, rect_y + i * 64, 64, 64)
             self.erasers_rect.append(rect)
 
+            # 存储画笔矩形的列表
         self.pens_rect = []
         for (i, img) in enumerate(self.pens):
             rect = pygame.Rect(10, 10 + i * 64, 64, 64)
             self.pens_rect.append(rect)
+
+            # 存储保存图片矩形的列表
         self.save_rect = []
         for (i, img) in enumerate(self.save_img):
             rect = pygame.Rect(830, 10 + i * 64, 64, 64)
             self.save_rect.append(rect)
 
+            # 加载调整画笔大小的图片并转换为包含alpha通道的表面
         self.sizes = [
             pygame.image.load("img/加号.png").convert_alpha(),
             pygame.image.load("img/减号.png").convert_alpha()
         ]
+
+        # 存储调整画笔大小按钮的矩形列表
         self.sizes_rect = []
         for (i, img) in enumerate(self.sizes):
-            rect = pygame.Rect(138+60, 20 + i * 32, 32, 32)
+            rect = pygame.Rect(138 + 60, 20 + i * 32, 32, 32)
             self.sizes_rect.append(rect)
 
     def generate_random_colors(self, num_colors=24):
@@ -218,43 +242,79 @@ class Menu:
                 return True
         return False
 
+
 class Paint:
 
     def __init__(self):
+        # 初始化pygame库
         pygame.init()
+
+        # 设置窗口大小并创建窗口
         self.screen = pygame.display.set_mode((950, 600))
+
+        # 设置窗口标题
         pygame.display.set_caption("艺术画板V1.0")
+
+        # 创建一个时钟对象，用于控制游戏循环的帧率
         self.clock = pygame.time.Clock()
+
+        # 创建一个画笔对象，并传入窗口表面作为参数
         self.brush = Brush(self.screen)
+
+        # 创建一个菜单对象，并传入窗口表面作为参数
         self.menu = Menu(self.screen)
+
+        # 将画笔对象传递给菜单对象，用于设置画笔属性（例如颜色、大小等）
         self.menu.set_brush(self.brush)
 
     def clear_screen(self):
+        # 清除屏幕，用白色填充
         self.screen.fill((255, 255, 255))
 
     def run(self):
+        # 清除屏幕开始绘制
         self.clear_screen()
+
+        # 运行标志，默认为True，表示程序正在运行
         running = True
+
+        # 游戏主循环
         while running:
+            # 控制帧率，限制循环每秒运行30次
             self.clock.tick(30)
+
+            # 遍历所有pygame事件
             for event in pygame.event.get():
-                if event.type == QUIT:
+                # 如果事件是退出事件
+                if event.type == pygame.QUIT:  # 注意这里应该是pygame.QUIT而不是QUIT
                     running = False
-                elif event.type == KEYDOWN:
-                    if event.key == K_ESCAPE:
+                    # 如果事件是键盘按下事件
+                elif event.type == pygame.KEYDOWN:  # 注意这里应该是pygame.KEYDOWN而不是KEYDOWN
+                    # 如果按下的是ESC键
+                    if event.key == pygame.K_ESCAPE:  # 注意这里应该是pygame.K_ESCAPE而不是K_ESCAPE
                         self.clear_screen()
+                        # 如果事件是鼠标按下事件
                 elif event.type == pygame.MOUSEBUTTONDOWN:
+                    # 如果鼠标位置在菜单之外，并且没有点击到菜单按钮
                     if event.pos[0] >= 74 and not self.menu.click_button(event.pos):
                         self.brush.start_draw(event.pos)
+                        # 如果事件是鼠标移动事件
                 elif event.type == pygame.MOUSEMOTION:
+                    # 如果画笔正在绘制
                     if self.brush.drawing:
                         self.brush.draw(event.pos)
+                        # 如果事件是鼠标释放事件
                 elif event.type == pygame.MOUSEBUTTONUP:
+                    # 结束绘制
                     self.brush.end_draw()
 
+                    # 绘制菜单
             self.menu.draw()
+
+            # 更新窗口显示
             pygame.display.flip()
 
+            # 退出pygame
         pygame.quit()
 
 if __name__ == '__main__':
